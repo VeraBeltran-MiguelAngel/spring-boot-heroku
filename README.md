@@ -4,9 +4,12 @@ Sistema de facturación en heroku
 # Iniciar sesión
 1. Abra el link https://facturacion-spring-72eede9087ed.herokuapp.com/
 2. Existen dos usuarios
-   user    password
-   admin   12345
-   andres  12345
+   
+| Usuario       | Contraseña    |
+| ------------- | ------------- |
+| admin         | 12345         |
+| andres        | 12345         |
+ 
 Cada uno tiene sus respectivos privilegios, usar el usuario admin para probar todas las funciones del sistema
 
 # Funcionalidades
