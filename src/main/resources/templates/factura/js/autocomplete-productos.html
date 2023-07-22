@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <body>
+    <script type="text/javascript" th:fragment="javascript">
+      /*El usuario a traves de un campo de texto a medida que va esribiendo se van 
+      realizando peticiones asincronas AJAX al servidor y estas son atendidas por el 
+      controlador, este toma el parametro que se esta enviando "termino" y busca los productos que 
+      coincidad con ese valor. Todos los productos encontrados los retorna en un JSON y
+      el autocomplete muestra estos prodcutos*/
+
+      $(document).ready(function () {
+        //asegurarse de que el documento html este completamente cargado(ready)
+        $("#buscar_producto").autocomplete({
+          //hacemos referecnia al campo del form.html con metodo autocomplete(recibe un objeto con dos metodos)
+          source: function (request, response) {
+            //metodo 1:source se encarga de hacer la peticion del los datos con ajax
+            $.ajax({
+              /*pasamos un objeto con todos los parametros y la implementacion del metodo success para manejar 
+              la respuesta.
+              Atributos: url, tipo de dato:json*/
+              url: "/factura/cargar-productos/" + request.term,
+              /*aqui va a el controlador para retornar los prd. encontrados, le pasamos un param a la ruta
+              (contiene el texto del input'buscar_producto'(form.html)) y se guarda en 'term'*/
+              dataType: "json",
+              data: {
+                //arreglo que guarda el parametro'term'
+                term: request.term,
+              },
+              success: function (data) {
+                //funcion encargada de recibir los datos en formato json y los pasa al autocomplete con response
+                response(
+                  $.map(data, function (item) {
+                    /*invocamos al metodo map(realiza un proceso por cada elemento del arreglo'data')
+                    @param data: es un arreglo
+                    @param function: funcion anonima que va a contener el valor de cada elemento
+                    Por cada item o cada elemento de data retorna el id,nombre,precio*/
+                    return {
+                      //datos a retornar
+                      value: item.id,
+                      label: item.nombre,
+                      precio: item.precio,
+                    };
+                  })
+                );
+              },
+            });
+          },
+          //metodo 2:select se encarga de procesar el resultado y hacer algo con los datos
+          select: function (event, ui) {
+            /*El metodo select nos permite realizar cualquier tipo de tarea una vez que seleccionamos 
+            un elemento del autocomplete*/
+            // $("#buscar_producto").val(ui.item.label);
+            // pasar el nombre del producto(item seleccionado) y lo pasamos al campo'buscar_producto'
+
+            //antes de crear la linea preguntamos si el producto existe(id)
+            if (itemsHelper.hasProducto(ui.item.value)) {
+              //si eiste el producto incrementamos cantidad
+              itemsHelper.incrementaCantidad(ui.item.value, ui.item.precio);
+              return false;
+            }
+            //tbody de 'plantilla-items.html'
+            var linea = $("#plantillaItemsFactura").html(); //obtenemos el contendio html del elemento
+            //reemplazar los parametros con los valores del map 'linea 29'
+            linea = linea.replace(/{ID}/g, ui.item.value);
+            linea = linea.replace(/{NOMBRE}/g, ui.item.label);
+            linea = linea.replace(/{PRECIO}/g, ui.item.precio);
+            //agregar la linea a la tabla
+            $("#cargarItemProductos tbody").append(linea);
+            itemsHelper.calcularImporte(ui.item.value, ui.item.precio, 1);
+            //dejar en blanco el campo buscar
+            $('input[name="buscar_producto"]').val("");
+
+            return false;
+          },
+        });
+        /*Al hacer submit en el formulario  se necesita eliminar el tbody  plantillaItemsFactura 
+        si no se elimina va a tomar el input de la plantilla como si fuera una linea mas y va a lanzar un error
+        por que el item ID contiene un valor string "{ID}"*/
+        $("form").submit(function () {
+          $("#plantillaItemsFactura").remove();
+          return;
+        });
+      });
+
+      /*Funcion para calcular el importe*/
+      var itemsHelper = {
+        calcularImporte: function (id, precio, cantidad) {
+          $("#total_importe_" + id).html(parseInt(precio) * parseInt(cantidad));
+          this.calcularGranTotal();
+        },
+        //para evitar lineas repetidas al seleccionar un mismo producto y que solo aumenta la cantidad
+        hasProducto: function (id) {
+          //esta funcion se encarga de buscar linea por linea en el detalle de la factura si existe el id del producto
+          var resultado = false;
+          //recorremos el input de plantilla-items.html
+          $('input[name="item_id[]"]').each(function () {
+            //si el id es igual al valor del input actual
+            if (parseInt(id) == parseInt($(this).val())) {
+              resultado = true;
+            }
+          });
+          return resultado;
+        },
+        //aqui incrementamos la cantidad de la linea existente
+        incrementaCantidad: function (id, precio) {
+          /*validar si la cantidad contiene un valor numerico (ya que puede tomar el valor string "cantidad[]")
+          convertimos a integer de lo contrario retornamos un 0*/
+          var cantidad = $("#cantidad_" + id).val()
+            ? parseInt($("#cantidad_" + id).val())
+            : 0;
+          // incrementamos la cantidad y se la pasamos al input'plantilla-items.html'
+          $("#cantidad_" + id).val(++cantidad);
+          //y volvemos a calcular el total
+          this.calcularImporte(id, precio, cantidad);
+          //limpiamos el campo buscar producto
+          $('input[name="buscar_producto"]').val("");
+        },
+        //eliminamos un linea del detalle factura
+        eliminarLineaFactura: function (id) {
+          $("#row_" + id).remove();
+          this.calcularGranTotal();
+        },
+        //sumar todos los totales
+        calcularGranTotal: function () {
+          var total = 0;
+          //expresion regular (^ 	Sirve para hacer match al principio del string)
+          $('span[id^="total_importe_"]').each(function () {
+            //recorremos los id de los productos
+            total += parseInt($(this).html());
+          });
+          //mostramos el resultado en el span de form.html
+          $("#gran_total").html(total);
+        },
+      };
+    </script>
+  </body>
+</html>

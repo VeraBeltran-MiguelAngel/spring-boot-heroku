@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+	<nav th:fragment="paginator"> <!-- nombre del fragmento -->
+
+		<ul class="pagination"> <!-- para que se meustre horizontal -->
+		
+			<li class="page-item"
+				th:class="${page.first? 'page-item disabled': 'page-item'}"> <!-- si es 1°pag -> desactiva si no activa link  -->
+				
+				<!-- page.first xq al ser boolean pone el Is por debajo.
+				si es la primera pagina solo muestra el texto "Primera"-->
+				<span 
+				class="page-link" 
+				th:if="${page.first}"
+				th:text="#{text.paginator.first}">
+				Primera
+				</span>
+				
+				<!-- si no es la primera pagina muestra el link hacia la 1° pag (/listar?0)-->
+				 <a 
+				 class="page-link" 
+				 th:if="${not page.first}" 
+				 th:href="@{${page.url}(page=0)}" 
+				 th:text="#{text.paginator.first}">
+				 Primera
+				</a>
+				 
+				</li>
+
+			<li class="page-item"
+				th:class="${not page.hasPrevious? 'page-item disabled': 'page-item'}">
+				
+				<!-- si no tiene pagina anterior mostramos el caracter "<"
+				utext para incluir cara cteres especiales en la traduccion-->
+				<span
+				class="page-link" 
+				th:if="${not page.hasPrevious}"
+				th:utext="#{text.paginator.previous}">
+				&laquo;
+				</span>
+				
+				<!-- si tiene pag anterior crea el link -->
+				<a 
+				class="page-link" 
+				th:if="${page.hasPrevious}"
+				th:href="@{${page.url}(page=${page.paginaActual-2})}"
+				th:utext="#{text.paginator.previous}">
+				&laquo;
+				</a>
+				
+			</li>
+			<!-- recorre la lista construida en PageRender"paginas" (rango creado)
+			si es la pag actual se sombrea en color azul, si no : solo muestra el numero-->
+			<li class="page-item" th:each="item : ${page.paginas}"
+				th:class="${item.actual? 'page-item active': 'page-item'}">
+				<!-- si es el numero actual muestra el texto con el num -->
+				<span 
+				class="page-link" 
+				th:if="${item.actual}" 
+				th:text="${item.numero}">
+				</span>
+				
+				<!-- si no es la pagina actual crea el link -->
+				<a 
+				class="page-link" 
+				th:if="${not item.actual}" 
+				th:href="@{${page.url}(page=${item.numero-1})}" 
+				th:text="${item.numero}">
+				</a>
+				
+			</li>
+
+
+			<li class="page-item"
+				th:class="${not page.hasNext? 'page-item disabled': 'page-item'}">
+				
+				<!-- si no tiene pag sig muestra el caracter ">" -->
+				<span 
+				class="page-link" 
+				th:if="${not page.hasNext}"
+				th:utext="#{text.paginator.next}">
+				&raquo;
+				</span>
+				
+				<!-- si tiene pag sig crea el link-->
+				<a 
+				class="page-link" 
+				th:if="${page.hasNext}"
+				th:href="@{${page.url}(page=${page.paginaActual})}"
+				th:utext="#{text.paginator.next}">
+				&raquo;
+				</a>
+			</li>
+
+			<li class="page-item"
+				th:class="${page.last? 'page-item disabled': 'page-item'}">
+				<span 
+				class="page-link" 
+				th:if="${page.last}" 
+				th:text="#{text.paginator.last}">
+				&Uacute;ltima
+				</span> 
+				
+				<!-- page.totalPaginas-1 para que coincida con la posicion del arreglo ej. 0,1,2,3
+				tiene 4 elementos -1 te da la pos 3 -->
+				<a 
+				class="page-link" 
+				th:if="${not page.last}" 
+				th:href="@{${page.url}(page=${page.totalPaginas-1})}"
+				th:text="#{text.paginator.last}">&Uacute;ltima
+				</a>
+				
+			</li>
+		</ul>
+
+	</nav>
+
+</body>
+</html>
