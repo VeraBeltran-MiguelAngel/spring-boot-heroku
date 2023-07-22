@@ -18,3 +18,6 @@ Cada uno tiene sus respectivos privilegios, usar el usuario admin para probar to
 3. Exportar informacion en diferentes tipos de archivos (JSON,XML,CSV)
 4. Crear facturas para cada cliente, ver su detalle o eliminarla
 
+# Diagrama BD 
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/c85faafe-bb90-40be-a1ef-3c35570c5965/Untitled.png)
+
