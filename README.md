@@ -19,5 +19,6 @@ Cada uno tiene sus respectivos privilegios, usar el usuario admin para probar to
 4. Crear facturas para cada cliente, ver su detalle o eliminarla
 
 # Diagrama BD 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/c85faafe-bb90-40be-a1ef-3c35570c5965/Untitled.png)
+![image](https://github.com/VeraBeltran-MiguelAngel/spring-boot-heroku/assets/114844367/62e95db0-462b-4fd6-a318-2090a7b5e8fc)
+
 
