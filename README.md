@@ -17,6 +17,18 @@ Cada uno tiene sus respectivos privilegios, usar el usuario admin para probar to
 2. Se puede traducir todo el texto de la aplicacion a ingles, alemán o español
 3. Exportar informacion en diferentes tipos de archivos (JSON,XML,CSV)
 4. Crear facturas para cada cliente, ver su detalle o eliminarla
+5. Al agregar un producto se debe empezar a escribir su nombre y va mostrarndo una lista de coincidencias
+   
+|  Producto               | 
+| ------------------------| 
+| Panasonic Pantalla LCD  |
+| Sony camara digital  |
+| Apple iPod|
+| Sony notebook|
+| HP Multifunctional|
+| Bianchi bicicleta|
+| Mica comoda 5 cajones|
+
 
 # Diagrama BD 
 ![image](https://github.com/VeraBeltran-MiguelAngel/spring-boot-heroku/assets/114844367/62e95db0-462b-4fd6-a318-2090a7b5e8fc)
