@@ -29,15 +29,14 @@
               th:href="@{'/listar'(page=${page.paginaActual-1}, format=csv)}"
               >CSV</a
             >
-            >
             <a
               class="btn btn-outline-success btn-xs float-right"
-              th:href="@{'/listar'(format=xml)}"
+              th:href="@{'/listar'(page=${page.paginaActual-1},format=xml)}"
               >XML</a
             >
             <a
               class="btn btn-outline-warning btn-xs float-right"
-              th:href="@{'/listar'(format=json)}"
+              th:href="@{'/listar'(page=${page.paginaActual-1},format=json)}"
               >JSON</a
             >
           </h4>
