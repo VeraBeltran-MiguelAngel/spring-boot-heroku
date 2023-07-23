@@ -25,20 +25,21 @@
               >crear cliente</a
             >
             <a
-              class="btn btn-success btn-xs float-right"
-              th:href="@{'/listar'(format=csv)}"
+              class="btn btn-success btn-xs float-right mx-1"
+              th:href="@{'/listar'(page=${page.paginaActual-1}, format=csv)}"
               >CSV</a
             >
+            >
             <a
-            class="btn btn-outline-success btn-xs float-right"
-            th:href="@{'/listar'(format=xml)}"
-            >XML</a
-          >
-          <a
-            class="btn btn-outline-warning btn-xs float-right"
-            th:href="@{'/listar'(format=json)}"
-            >JSON</a
-          >
+              class="btn btn-outline-success btn-xs float-right"
+              th:href="@{'/listar'(format=xml)}"
+              >XML</a
+            >
+            <a
+              class="btn btn-outline-warning btn-xs float-right"
+              th:href="@{'/listar'(format=json)}"
+              >JSON</a
+            >
           </h4>
           <table class="table table-striped table-bordered">
             <thead class="thead-dark">
